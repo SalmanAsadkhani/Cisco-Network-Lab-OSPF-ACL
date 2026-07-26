@@ -1,0 +1,85 @@
+!
+! =====================================================
+! Device: R3-BR
+! Role: Branch Router
+!
+! Features:
+! - Branch LAN Routing
+! - NAT Overload
+! - Static NAT Port Forwarding
+! - WAN ACL Filtering
+! - Default Route
+!
+! =====================================================
+
+
+hostname R3-BR
+
+
+ip cef
+no ipv6 cef
+
+
+
+!
+! Branch LAN
+!
+
+interface GigabitEthernet0/0
+ description Branch-LAN
+ ip address 172.17.17.1 255.255.255.0
+ ip nat inside
+
+
+
+!
+! WAN Interface
+!
+
+interface GigabitEthernet0/1
+ description WAN-to-ISP
+ ip address 200.200.200.1 255.255.255.252
+ ip nat outside
+ ip access-group 100 in
+
+
+
+!
+! NAT Configuration
+!
+
+
+access-list 1 permit 172.17.17.0 0.0.0.255
+
+
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+
+
+
+!
+! Web Server Port Forwarding
+!
+
+ip nat inside source static tcp 172.17.17.100 443 200.200.200.1 443
+
+
+
+!
+! WAN Security ACL
+!
+
+access-list 100 permit tcp any any eq 443
+access-list 100 permit icmp any any
+
+
+
+!
+! Default Route
+!
+
+ip route 0.0.0.0 0.0.0.0 200.200.200.2
+
+
+
+!
+end

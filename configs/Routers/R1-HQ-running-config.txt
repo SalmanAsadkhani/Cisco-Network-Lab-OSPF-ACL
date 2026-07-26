@@ -1,0 +1,90 @@
+!
+! =====================================================
+! Device: R1-HQ
+! Role: Headquarters Router
+!
+! Features:
+! - Router-on-a-Stick
+! - Inter-VLAN Routing
+! - DHCP Relay
+! - NAT Overload
+! - Default Route
+!
+! =====================================================
+
+hostname R1-HQ
+
+!
+! System Configuration
+!
+ip cef
+no ipv6 cef
+
+
+!
+! LAN VLAN Interfaces
+!
+
+interface GigabitEthernet0/0
+ description Trunk-to-Switch
+ no ip address
+ ip nat inside
+
+
+interface GigabitEthernet0/0.10
+ description VLAN-10-USERS
+ encapsulation dot1Q 10
+ ip address 172.16.10.1 255.255.255.0
+ ip helper-address 172.16.30.100
+ ip nat inside
+
+
+interface GigabitEthernet0/0.20
+ description VLAN-20-USERS
+ encapsulation dot1Q 20
+ ip address 172.16.20.1 255.255.255.0
+ ip helper-address 172.16.30.100
+ ip nat inside
+
+
+interface GigabitEthernet0/0.30
+ description SERVER-VLAN
+ encapsulation dot1Q 30
+ ip address 172.16.30.1 255.255.255.0
+ ip nat inside
+
+
+
+!
+! WAN Interface
+!
+
+interface GigabitEthernet0/1
+ description WAN-to-ISP
+ ip address 100.100.100.1 255.255.255.252
+ ip nat outside
+
+
+
+!
+! NAT Configuration
+!
+
+access-list 1 permit 172.16.10.0 0.0.0.255
+access-list 1 permit 172.16.20.0 0.0.0.255
+access-list 1 permit 172.16.30.0 0.0.0.255
+
+
+ip nat inside source list 1 interface GigabitEthernet0/1 overload
+
+
+
+!
+! Default Route
+!
+
+ip route 0.0.0.0 0.0.0.0 100.100.100.2
+
+
+!
+end

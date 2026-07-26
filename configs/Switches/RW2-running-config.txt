@@ -1,0 +1,116 @@
+!
+! =====================================================
+! Device: RW2
+! Role: Access Switch
+!
+! Features:
+! - Access Layer Switching
+! - Port Security (Sticky MAC)
+! - Violation Restrict Mode
+!
+! =====================================================
+
+hostname RW2
+
+!
+! System Configuration
+!
+
+no service password-encryption
+
+spanning-tree mode pvst
+
+ip cef
+no ipv6 cef
+
+spanning-tree mode pvst
+!
+! Access Interfaces
+!
+
+interface GigabitEthernet1/0/1
+ description BR-PC
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+
+
+!
+! Unused Access Ports
+!
+
+interface GigabitEthernet1/0/2
+
+interface GigabitEthernet1/0/3
+
+interface GigabitEthernet1/0/4
+
+interface GigabitEthernet1/0/5
+
+interface GigabitEthernet1/0/6
+
+interface GigabitEthernet1/0/7
+
+interface GigabitEthernet1/0/8
+
+interface GigabitEthernet1/0/9
+
+interface GigabitEthernet1/0/10
+
+interface GigabitEthernet1/0/11
+
+interface GigabitEthernet1/0/12
+
+interface GigabitEthernet1/0/13
+
+interface GigabitEthernet1/0/14
+
+interface GigabitEthernet1/0/15
+
+interface GigabitEthernet1/0/16
+
+interface GigabitEthernet1/0/17
+
+interface GigabitEthernet1/0/18
+
+interface GigabitEthernet1/0/19
+
+interface GigabitEthernet1/0/20
+
+interface GigabitEthernet1/0/21
+
+interface GigabitEthernet1/0/22
+
+interface GigabitEthernet1/0/23
+
+interface GigabitEthernet1/0/24
+
+
+!
+! Uplink Interfaces
+!
+
+interface GigabitEthernet1/1/1
+
+interface GigabitEthernet1/1/2
+
+interface GigabitEthernet1/1/3
+
+interface GigabitEthernet1/1/4
+
+
+!
+! Management VLAN
+!
+
+interface Vlan1
+ no ip address
+ shutdown
+
+
+!
+end
